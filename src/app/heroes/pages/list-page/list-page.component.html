@@ -1,3 +1,7 @@
-<ul *ngFor="let hero of heroes">
-    <li>{{hero.superhero}}</li>
-</ul>
+<h1>Listado de heroes</h1>
+<mat-divider></mat-divider>
+<div class="grid">
+    <div *ngFor="let hero of heroes" class="col-12 sm:col-6 md:col-3">
+        <heroes-card [hero]="hero"></heroes-card>
+    </div>
+</div>
