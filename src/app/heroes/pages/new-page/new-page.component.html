@@ -1,1 +1,36 @@
-<p>new-page works!</p>
+<ng-template #loader>
+    <mat-spinner></mat-spinner>
+</ng-template>
+
+
+<div *ngIf="hero; else loader" class="grid mt-3">
+    <mat-card class="col-12 sm:col-6">
+        <mat-card-header>
+            <mat-card-title>
+                {{hero.superhero}}
+            </mat-card-title>
+            <mat-card-subtitle>
+                {{hero.publisher}}
+            </mat-card-subtitle>
+        </mat-card-header>
+        <img mat-card-image [src]="hero | heroImage" [alt]="hero.superhero" />
+    </mat-card>
+    <mat-card class="col-12 sm:col-6">
+        <mat-list>
+            <mat-list-item>
+                {{hero.publisher}}
+            </mat-list-item>
+            <mat-list-item>
+                {{hero.alter_ego}}
+            </mat-list-item><mat-list-item>
+                {{hero.first_appearance}}
+            </mat-list-item>
+        </mat-list>
+        <mat-chip-listbox>
+            <mat-chip *ngFor="let name of hero.characters.split(',') | slice:0:3">
+                {{name}}
+            </mat-chip>
+        </mat-chip-listbox>
+        <button class="mt-3" type="button" (click)="goBack()" mat-raised-button color="warn">Go back</button>
+    </mat-card>
+</div>
