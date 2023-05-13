@@ -10,26 +10,9 @@ import { Hero } from '../../interfaces/hero.interface';
   templateUrl: './new-page.component.html',
   styles: [],
 })
-export class NewPageComponent implements OnInit {
-  public hero?: Hero;
-
-  ngOnInit(): void {
-    this.activateRoute.params
-      .pipe(switchMap(({ id }) => this.heroService.getHeroById(id)))
-      .subscribe((hero) => {
-        if (!hero) return this.router.navigate(['/heroes/list']);
-        this.hero = hero;
-        return;
-      });
-  }
-
-  constructor(
-    private heroService: HeroService,
-    private activateRoute: ActivatedRoute,
-    private router: Router
-  ) {}
-
-  goBack(): void {
-    this.router.navigateByUrl('heroes/list');
-  }
+export class NewPageComponent {
+  public publishers = [
+    { id: 'Dc Comics', desc: 'DC Comics' },
+    { id: 'Marvel Comics', desc: 'Marvel Comics' },
+  ];
 }
