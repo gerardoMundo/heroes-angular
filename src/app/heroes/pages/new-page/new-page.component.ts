@@ -3,16 +3,71 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { HeroService } from '../../services/heroes.service';
 import { switchMap } from 'rxjs';
-import { Hero } from '../../interfaces/hero.interface';
+import { Hero, Publisher } from '../../interfaces/hero.interface';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-new-page',
   templateUrl: './new-page.component.html',
   styles: [],
 })
-export class NewPageComponent {
+export class NewPageComponent implements OnInit {
   public publishers = [
     { id: 'Dc Comics', desc: 'DC Comics' },
     { id: 'Marvel Comics', desc: 'Marvel Comics' },
   ];
+
+  public heroForm = new FormGroup({
+    id: new FormControl<string>(''),
+    superhero: new FormControl('', { nonNullable: true }),
+    publisher: new FormControl(Publisher.DCComics),
+    alter_ego: new FormControl(''),
+    first_appearance: new FormControl(''),
+    characters: new FormControl(''),
+    alt_img: new FormControl(''),
+  });
+
+  constructor(
+    private heroService: HeroService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private snackbar: MatSnackBar
+  ) {}
+
+  get currentHero(): Hero {
+    const hero = this.heroForm.value;
+    return hero as Hero;
+  }
+
+  ngOnInit(): void {
+    if (!this.router.url.includes('edit')) return;
+
+    this.activatedRoute.params
+      .pipe(switchMap(({ id }) => this.heroService.getHeroById(id)))
+      .subscribe((hero) => {
+        if (!hero) return this.router.navigateByUrl('/');
+
+        this.heroForm.reset(hero);
+        return;
+      });
+  }
+
+  onSubmit(): void {
+    if (this.heroForm.invalid) return;
+
+    if (!this.currentHero.id) {
+      this.heroService.createHero(this.currentHero).subscribe((hero) => {
+        this.showMessage(`Superheroe ${hero.superhero} se creado`);
+      });
+    }
+
+    this.heroService.updateHero(this.currentHero).subscribe((hero) => {
+      this.showMessage(`Superheroe ${hero.superhero} ha sido actualizado`);
+    });
+  }
+
+  showMessage(message: string): void {
+    this.snackbar.open(message, 'Hecho', { duration: 2500 });
+  }
 }
