@@ -6,7 +6,7 @@ import { environments } from 'src/environments/environments';
 import { User } from '../interfaces/user.interface';
 
 @Injectable({ providedIn: 'root' })
-export class ServiceNameService {
+export class AuthService {
   private user?: User;
   private baseUrl = environments.baseUrl;
 
@@ -18,8 +18,13 @@ export class ServiceNameService {
   logIn(email: string, password: string): Observable<User> {
     return this.http.get<User>(`${this.baseUrl}/users/1`).pipe(
       tap((user) => (this.user = user)),
-      tap((user) => localStorage.setItem('token', user.id.toString()))
+      tap((user) => localStorage.setItem('token', user.email.toString()))
     );
+  }
+
+  logout() {
+    this.user = undefined;
+    localStorage.clear();
   }
 
   constructor(private http: HttpClient) {}

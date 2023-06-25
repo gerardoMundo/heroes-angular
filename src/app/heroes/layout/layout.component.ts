@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { HeroService } from '../services/heroes.service';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { Router } from '@angular/router';
+import { User } from 'src/app/auth/interfaces/user.interface';
 
 @Component({
   selector: 'app-layout',
@@ -23,4 +27,15 @@ export class LayoutComponent {
       url: './search',
     },
   ];
+
+  get user(): User | undefined {
+    return this.authService.currentUser;
+  }
+
+  constructor(private authService: AuthService, private router: Router) {}
+
+  onLogout() {
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
+  }
 }

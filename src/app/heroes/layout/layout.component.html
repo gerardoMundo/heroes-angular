@@ -22,7 +22,9 @@
             <mat-icon> menu </mat-icon>
         </button>
         <span class="spacer"></span>
-        <button mat-raised-button>Log out</button>
+        <small class="mr-2">{{user?.user}}</small>
+
+        <button (click)="onLogout()" mat-raised-button>Log out</button>
     </mat-toolbar>
 
     <div class="container p-2">
